@@ -1,11 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import connectDB from './db/connect.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || '';
 
 app.get('/', (req, res) => {
     res.send('Hello, Multi-Tenant Expense and Analytics API is running!');
@@ -13,4 +13,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    connectDB();
 });
