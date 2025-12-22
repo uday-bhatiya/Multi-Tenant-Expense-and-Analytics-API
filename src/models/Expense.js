@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const ExpenseSchema = new Schema({
     amount: Number,
-    category: {
+    categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
     },
