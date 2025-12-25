@@ -1,4 +1,4 @@
-import { createExpense, categoryWiseMonthly, categoryWiseYearly } from "../services/expense.service.js";
+import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage} from "../services/expense.service.js";
 
 export async function addExpense(req, res){
     try {
@@ -20,6 +20,45 @@ export async function getMonthlyExpense(req, res) {
     } catch (error) {
         res.status(500).json({
             error: "Failed to get Monthly",
+            errorMessage: error.message
+        });
+    }
+}
+
+export async function getDailyTrend(req, res) {
+    try {
+        const {teamId} = req.query;
+        const expense = await dailyTrend(teamId);
+        res.status(200).json(expense);
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to get Daily trend",
+            errorMessage: error.message
+        })
+    }
+}
+
+export async function getTopSpenders(req, res){
+    try {
+        const {teamId} = req.query;
+        const spenders = await topSpenders(teamId);
+        res.status(200).json(spenders);
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to get top spenders",
+            errorMessage: error.message
+        });
+    }
+}
+
+export async function getGreaterThanAvarage(req, res){
+    try {
+        // const {teamId} = req.query;
+        const expense = await greaterThanAvarage();
+        res.status(200).json(expense);
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to get expense",
             errorMessage: error.message
         });
     }
