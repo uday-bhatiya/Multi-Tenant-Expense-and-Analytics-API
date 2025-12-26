@@ -1,4 +1,4 @@
-import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage} from "../services/expense.service.js";
+import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage, eachCategoryExpense} from "../services/expense.service.js";
 
 export async function addExpense(req, res){
     try {
@@ -62,4 +62,16 @@ export async function getGreaterThanAvarage(req, res){
             errorMessage: error.message
         });
     }
+}
+
+export async function getEachCategoryExpense(req, res){
+   try {
+     const expense = await eachCategoryExpense();
+     res.status(200).json(expense);
+   } catch (error) {
+    res.status(500).json({
+        error: "Failed to get category expense",
+        errorMessage: error.message
+    });
+   }
 }

@@ -195,6 +195,45 @@ export async function greaterThanAvarage() {
 
         return expense;
     } catch (error) {
-        
+        console.error("Failed to get avarage", error);
+        throw new error;
+    }
+}
+
+export async function eachCategoryExpense(){
+    try {
+        const expense = await Expense.aggregate([
+            {
+                $group: {
+                    _id: "$categoryId",
+                    totalSpent: {$sum: "$amount"},
+                    avg: {$avg: "$amount"},
+                    totalExpense: {$sum: 1}
+                }
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            },
+            {$unwind: "$category"},
+            {
+                $project: {
+                    _id: 0,
+                    name: "$category.name",
+                    totalSpent: 1,
+                    avg: 1,
+                    totalExpense: 1
+                }
+            }
+        ]);
+
+        return expense;
+    } catch (error) {
+        console.error("Failed to get each category expense", error);
+        throw new error;
     }
 }
