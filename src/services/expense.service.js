@@ -237,3 +237,41 @@ export async function eachCategoryExpense(){
         throw new error;
     }
 }
+
+export async function expenseAdvancedCursor({teamId, limit=10, cursor}){
+    try {
+        
+        const query = {
+            teamId: new mongoose.Types.ObjectId(teamId)
+        };
+
+        if(cursor){
+            const {createdAt, _id} = cursor;
+
+            query.$or = [
+                { createdAt: {$lt: new Date(createdAt)}},
+                {
+                    createdAt: new Date(createdAt),
+                    _id: {$lt: new mongoose.Types.ObjectId(_id)}
+                }
+            ];
+        }
+
+        const expense = await Expense.find(query).sort({createdAt: -1, _id: -1}).limit(limit + 1);
+        // console.log(expense)
+
+        const hasNext = expense.length > limit;
+        if(hasNext) expense.pop();
+
+        const nextCursor = hasNext ? {
+            createdAt: expense[expense.length - 1].createdAt, 
+            _id: expense[expense.length - 1]._id
+        } : null;
+
+        return { expense, nextCursor };
+
+    } catch (error) {
+        console.error("Failed to paginate", error);
+        throw new error;
+    }
+}

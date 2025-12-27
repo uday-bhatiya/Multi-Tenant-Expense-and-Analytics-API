@@ -1,5 +1,5 @@
 import express from "express";
-import { addExpense, getDailyTrend, getMonthlyExpense, getTopSpenders, getGreaterThanAvarage, getEachCategoryExpense, getExpense, getExpenseCursor } from "../controllers/expense.controller.js";
+import { addExpense, getDailyTrend, getMonthlyExpense, getTopSpenders, getGreaterThanAvarage, getEachCategoryExpense, getExpense, getExpenseCursor, getExpenseAdvancedCursor } from "../controllers/expense.controller.js";
 
 const router = express.Router();
 
@@ -12,5 +12,6 @@ router.get("/greater-than-avarage", getGreaterThanAvarage);
 router.get("/each-category", getEachCategoryExpense);
 router.get("/get-expense", getExpense);
 router.get("/get-expense-cursor", getExpenseCursor);
+router.get("/get-expense-cursor-advanced", getExpenseAdvancedCursor);
 
 export default router;

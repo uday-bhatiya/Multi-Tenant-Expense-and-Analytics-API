@@ -1,5 +1,5 @@
 import Expense from "../models/Expense.js";
-import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage, eachCategoryExpense} from "../services/expense.service.js";
+import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage, eachCategoryExpense, expenseAdvancedCursor} from "../services/expense.service.js";
 
 export async function addExpense(req, res){
     try {
@@ -102,7 +102,7 @@ export async function getExpense(req, res){
 }
 
 /////////// Cursor Based Paginatoion
-
+/////////// Basic
 export async function getExpenseCursor(req,res){
     try {
 
@@ -124,6 +124,29 @@ export async function getExpenseCursor(req,res){
         
     } catch (error) {
         res.status(500).json({
+            error: "Error in pagination",
+            errorMessage: error.message
+        });
+    }
+}
+
+/////////// Cursor Based Paginatoion
+/////////// Advanced
+export async function getExpenseAdvancedCursor(req,res){
+    try {
+
+        const { teamId, limit, cursor } = req.query;
+        
+        const expense = await expenseAdvancedCursor({
+            teamId,
+            limit: Number(limit),
+            cursor: cursor ? JSON.parse(cursor) : null
+        });
+
+        res.status(200).json(expense);
+        
+    } catch (error) {
+         res.status(500).json({
             error: "Error in pagination",
             errorMessage: error.message
         });
