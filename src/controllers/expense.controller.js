@@ -100,3 +100,32 @@ export async function getExpense(req, res){
         });
     }
 }
+
+/////////// Cursor Based Paginatoion
+
+export async function getExpenseCursor(req,res){
+    try {
+
+        const limit = parseInt(req.query.limit);
+        const cursor = req.query.cursor;
+
+        const query = cursor ? {_id: {$lt: cursor}} : {};
+
+        const expense = await Expense.find(query).sort({_id: -1}).limit(limit + 1);
+
+        const hasMore = expense.length > limit;
+        if(hasMore) expense.pop();
+
+        res.status(200).json({
+            data: expense,
+            nextCursor: hasMore ? expense[expense.length - 1]._id : null,
+            hasMore
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            error: "Error in pagination",
+            errorMessage: error.message
+        });
+    }
+}
