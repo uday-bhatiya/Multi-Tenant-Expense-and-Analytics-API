@@ -1,3 +1,4 @@
+import Expense from "../models/Expense.js";
 import { createExpense, categoryWiseMonthly, dailyTrend, topSpenders, greaterThanAvarage, eachCategoryExpense} from "../services/expense.service.js";
 
 export async function addExpense(req, res){
@@ -74,4 +75,28 @@ export async function getEachCategoryExpense(req, res){
         errorMessage: error.message
     });
    }
+}
+
+/////////// PAGINATION ///////////
+
+/////////// Off Set Paginatoion
+
+export async function getExpense(req, res){
+    try {
+
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+
+        const skip = (page - 1) * limit;
+
+        const expense = await Expense.find().sort({createdAt: -1}).skip(skip).limit(limit);
+
+        res.status(200).json(expense);
+        
+    } catch (error) {
+        res.status(500).json({
+            error: "Error in pagination",
+            errorMessage: error.message
+        });
+    }
 }
